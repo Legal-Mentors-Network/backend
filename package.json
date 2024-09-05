@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.10.0",
+    "haversine-distance": "^1.2.1",
+    "hono": "^4.2.3",
+    "pocketbase": "^0.21.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1"
+  }
+}
