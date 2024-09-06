@@ -24,10 +24,12 @@ export async function getConnection(userId: string, users: User[]): Promise<Conn
         return buildConnectionFromDTO(result)
     } catch (error) {
         console.log("error fetching connection", error)
-        if (error instanceof ClientResponseError) {
+        if (error instanceof ClientResponseError && error.status === 404) {
             // TODO: hono log could not find connection with original error
+            return null
         }
-    }
 
-    return null
+        // rethrow if not the expected 404 error
+        throw error
+    }
 }

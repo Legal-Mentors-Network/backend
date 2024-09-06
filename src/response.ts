@@ -26,7 +26,7 @@ export async function guard<T>(ctx: Context, callback: () => Promise<T>){
         }
 
         if (error instanceof ClientResponseError) {
-            ctx.status(500)
+            ctx.status(error.status as StatusCode)
             return ctx.json({ message: error.message })
         }
 
