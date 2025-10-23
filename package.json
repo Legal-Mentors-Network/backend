@@ -6,10 +6,12 @@
     "@hono/node-server": "^1.10.0",
     "haversine-distance": "^1.2.1",
     "hono": "^4.2.3",
-    "pocketbase": "^0.21.1"
+    "pocketbase": "^0.21.1",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
-    "tsx": "^4.7.1"
+    "tsx": "^4.7.1",
+    "typescript": "^5.9.3"
   }
 }
