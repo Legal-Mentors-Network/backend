@@ -64,8 +64,17 @@ function transformUser(dto: UserDTO): User {
  * @throws {UnauthorizedError} if authentication fails
  */
 export async function authenticate(): Promise<void> {
+  const email = process.env.PB_ADMIN_EMAIL;
+  const password = process.env.PB_ADMIN_PASSWORD;
+
+  if (!email || !password) {
+    throw new UnauthorizedError(
+      'Missing PocketBase admin credentials. Set PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD environment variables.'
+    );
+  }
+
   try {
-    await pb.admins.authWithPassword('admin@mail.com', 'Password123');
+    await pb.admins.authWithPassword(email, password);
   } catch (error) {
     console.error('PocketBase authentication failed:', error);
     if (error instanceof ClientResponseError) {

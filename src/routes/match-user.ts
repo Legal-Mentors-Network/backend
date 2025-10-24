@@ -2,7 +2,6 @@ import { Hono } from 'hono'
 import type { Context } from 'hono'
 import { z } from 'zod'
 import {
-  authenticate,
   getUserById,
   getUsersByIds,
   getMentees,
@@ -11,8 +10,12 @@ import {
 } from '../models/User'
 import { findMatches, saveMatches } from '../models/match'
 import { BadRequestError } from '../lib/errors'
+import { authMiddleware } from '../middleware/auth'
 
 const match = new Hono()
+
+// Apply auth middleware to all routes
+match.use('*', authMiddleware)
 
 // Request param schema
 const uuidSchema = z.string().uuid()
@@ -28,9 +31,6 @@ const matchResponseSchema = z.object({
  * Find and return matches for a user based on their preferences
  */
 match.get('/:id', async (ctx: Context) => {
-  // Authenticate with PocketBase
-  await authenticate()
-
   // Validate user ID param
   const id = ctx.req.param('id')
   const validationResult = uuidSchema.safeParse(id)
