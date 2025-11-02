@@ -17,8 +17,8 @@ const match = new Hono()
 // Apply auth middleware to all routes
 match.use('*', authMiddleware)
 
-// Request param schema
-const uuidSchema = z.string().uuid()
+// Request param schema - PocketBase IDs are 15-char alphanumeric strings, not UUIDs
+const idSchema = z.string().min(1)
 
 // Response schema
 const matchResponseSchema = z.object({
@@ -33,9 +33,9 @@ const matchResponseSchema = z.object({
 match.get('/:id', async (ctx: Context) => {
   // Validate user ID param
   const id = ctx.req.param('id')
-  const validationResult = uuidSchema.safeParse(id)
+  const validationResult = idSchema.safeParse(id)
   if (!validationResult.success) {
-    throw new BadRequestError('Invalid user ID format. Must be a valid UUID.')
+    throw new BadRequestError('Invalid user ID format.')
   }
 
   // Get current user
