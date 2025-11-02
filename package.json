@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "test": "PB_URL=http://127.0.0.1:8091 PB_ADMIN_EMAIL=admin@lmn.com PB_ADMIN_PASSWORD=admin123456 vitest"
+    "test": "PB_URL=http://127.0.0.1:8092 PB_ADMIN_EMAIL=admin@lmn.com PB_ADMIN_PASSWORD=admin123456 vitest"
   },
   "dependencies": {
     "@hono/node-server": "^1.10.0",
