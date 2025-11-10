@@ -41,20 +41,20 @@ function transformConnection(dto: ConnectionDTO): Connection {
  */
 function isWithinRange(currentUser: User, user: User): boolean {
   const distance = haversine(
-    { latitude: currentUser.latitude, longitude: currentUser.longitude },
-    { latitude: user.latitude, longitude: user.longitude }
+    { latitude: currentUser.location.latitude, longitude: currentUser.location.longitude },
+    { latitude: user.location.latitude, longitude: user.location.longitude }
   );
 
   // Convert distance from meters to kilometers
   const distanceInKm = distance / 1000;
 
   // If current user has no max distance (0), they accept any distance
-  if (currentUser.maxDistance === 0) return true;
-  if (distanceInKm > currentUser.maxDistance) return false;
+  if (currentUser.preferences.maxDistance === 0) return true;
+  if (distanceInKm > currentUser.preferences.maxDistance) return false;
 
   // If other user has no max distance (0), they accept any distance
-  if (user.maxDistance === 0) return true;
-  if (distanceInKm > user.maxDistance) return false;
+  if (user.preferences.maxDistance === 0) return true;
+  if (distanceInKm > user.preferences.maxDistance) return false;
 
   return true;
 }
@@ -65,12 +65,12 @@ function isWithinRange(currentUser: User, user: User): boolean {
 export function findMatches(currentUser: User, users: User[]): User[] {
   return users.filter((user) => {
     // Check if user's age is within current user's preferences
-    if (user.age < currentUser.minAge || user.age > currentUser.maxAge) {
+    if (user.age < currentUser.preferences.minAge || user.age > currentUser.preferences.maxAge) {
       return false;
     }
 
     // Check if current user's age is within user's preferences
-    if (currentUser.age < user.minAge || currentUser.age > user.maxAge) {
+    if (currentUser.age < user.preferences.minAge || currentUser.age > user.preferences.maxAge) {
       return false;
     }
 

@@ -49,14 +49,18 @@ export async function seedUser(userData: Omit<User, 'id'>): Promise<User> {
       name: userData.name,
       age: userData.age,
       role: userData.role,
-      location: userData.location,
-      latitude: userData.latitude.toString(), // PocketBase stores as string
-      longitude: userData.longitude.toString(), // PocketBase stores as string
-      minAge: userData.minAge,
-      maxAge: userData.maxAge,
-      maxDistance: userData.maxDistance,
+      location: `${userData.location.city}, ${userData.location.country}`, // Keep for backward compatibility
+      city: userData.location.city,
+      country: userData.location.country,
+      latitude: userData.location.latitude.toString(), // PocketBase stores as string
+      longitude: userData.location.longitude.toString(), // PocketBase stores as string
+      minAge: userData.preferences.minAge,
+      maxAge: userData.preferences.maxAge,
+      maxDistance: userData.preferences.maxDistance,
       user: userAccount.id, // Link to the user account
-      avatar: 'https://via.placeholder.com/150', // Placeholder avatar URL
+      avatar: userData.avatar || 'https://via.placeholder.com/150', // Placeholder avatar URL
+      bio: userData.bio,
+      skills: userData.skills || [],
     };
 
     const profile = await pb.collection('profiles').create(profileData);
@@ -67,12 +71,20 @@ export async function seedUser(userData: Omit<User, 'id'>): Promise<User> {
       name: profile.name,
       age: profile.age,
       role: profile.role,
-      location: profile.location,
-      latitude: parseFloat(profile.latitude),
-      longitude: parseFloat(profile.longitude),
-      minAge: profile.minAge,
-      maxAge: profile.maxAge,
-      maxDistance: profile.maxDistance,
+      location: {
+        city: profile.city,
+        country: profile.country,
+        latitude: parseFloat(profile.latitude),
+        longitude: parseFloat(profile.longitude),
+      },
+      preferences: {
+        minAge: profile.minAge,
+        maxAge: profile.maxAge,
+        maxDistance: profile.maxDistance,
+      },
+      avatar: profile.avatar,
+      bio: profile.bio,
+      skills: profile.skills || [],
     };
   } catch (error) {
     console.error('Error seeding user:', error);

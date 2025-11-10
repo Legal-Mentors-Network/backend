@@ -25,12 +25,17 @@ export const aliceMentorNYC: Omit<User, 'id'> = {
   name: 'Alice Mentor NYC',
   age: 30,
   role: 'Mentor',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 25,
-  maxAge: 35,
-  maxDistance: 50,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 35,
+    maxDistance: 50,
+  },
 };
 
 /**
@@ -41,12 +46,17 @@ export const bobMenteeNYC: Omit<User, 'id'> = {
   name: 'Bob Mentee NYC',
   age: 28,
   role: 'Mentee',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 28,
-  maxAge: 40,
-  maxDistance: 0, // No distance limit for multi-match testing
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 28,
+    maxAge: 40,
+    maxDistance: 0, // No distance limit for multi-match testing
+  },
 };
 
 /**
@@ -57,12 +67,17 @@ export const carolMenteeNYC: Omit<User, 'id'> = {
   name: 'Carol Mentee NYC',
   age: 32,
   role: 'Mentee',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 30,
-  maxAge: 45,
-  maxDistance: 100,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 30,
+    maxAge: 45,
+    maxDistance: 100,
+  },
 };
 
 /**
@@ -73,12 +88,17 @@ export const davidMenteeNYCTooYoung: Omit<User, 'id'> = {
   name: 'David Mentee NYC Too Young',
   age: 20,
   role: 'Mentee',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 25,
-  maxAge: 35,
-  maxDistance: 50,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 35,
+    maxDistance: 50,
+  },
 };
 
 /**
@@ -89,12 +109,17 @@ export const eveMenteeLATooFar: Omit<User, 'id'> = {
   name: 'Eve Mentee LA Too Far',
   age: 28,
   role: 'Mentee',
-  location: 'Los Angeles, CA',
-  latitude: LA_COORDS.latitude,
-  longitude: LA_COORDS.longitude,
-  minAge: 25,
-  maxAge: 35,
-  maxDistance: 50,
+  location: {
+    city: 'Los Angeles',
+    country: 'US',
+    latitude: LA_COORDS.latitude,
+    longitude: LA_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 35,
+    maxDistance: 50,
+  },
 };
 
 /**
@@ -105,12 +130,17 @@ export const frankMentorNYC: Omit<User, 'id'> = {
   name: 'Frank Mentor NYC',
   age: 35,
   role: 'Mentor',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 25,
-  maxAge: 40,
-  maxDistance: 50,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 40,
+    maxDistance: 50,
+  },
 };
 
 /**
@@ -121,12 +151,17 @@ export const graceMenteeLANoDistanceLimit: Omit<User, 'id'> = {
   name: 'Grace Mentee LA No Distance Limit',
   age: 28,
   role: 'Mentee',
-  location: 'Los Angeles, CA',
-  latitude: LA_COORDS.latitude,
-  longitude: LA_COORDS.longitude,
-  minAge: 25,
-  maxAge: 35,
-  maxDistance: 0, // No distance preference
+  location: {
+    city: 'Los Angeles',
+    country: 'US',
+    latitude: LA_COORDS.latitude,
+    longitude: LA_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 35,
+    maxDistance: 0, // No distance preference
+  },
 };
 
 /**
@@ -136,12 +171,17 @@ export const henryMentorNYCNoDistanceLimit: Omit<User, 'id'> = {
   name: 'Henry Mentor NYC No Distance Limit',
   age: 30,
   role: 'Mentor',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 25,
-  maxAge: 35,
-  maxDistance: 0,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 35,
+    maxDistance: 0,
+  },
 };
 
 /**
@@ -152,12 +192,17 @@ export const irisMenteeNYCMinAge: Omit<User, 'id'> = {
   name: 'Iris Mentee NYC Min Age',
   age: 25,
   role: 'Mentee',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 25,
-  maxAge: 40,
-  maxDistance: 50,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 40,
+    maxDistance: 50,
+  },
 };
 
 /**
@@ -168,12 +213,17 @@ export const jackMenteeNYCMaxAge: Omit<User, 'id'> = {
   name: 'Jack Mentee NYC Max Age',
   age: 35,
   role: 'Mentee',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 25,
-  maxAge: 40,
-  maxDistance: 50,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 40,
+    maxDistance: 50,
+  },
 };
 
 /**
@@ -184,12 +234,17 @@ export const karenMenteeNYCTooOld: Omit<User, 'id'> = {
   name: 'Karen Mentee NYC Too Old',
   age: 36,
   role: 'Mentee',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 25,
-  maxAge: 40,
-  maxDistance: 50,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 40,
+    maxDistance: 50,
+  },
 };
 
 /**
@@ -200,12 +255,17 @@ export const leoMentorChicago: Omit<User, 'id'> = {
   name: 'Leo Mentor Chicago',
   age: 35,
   role: 'Mentor',
-  location: 'Chicago, IL',
-  latitude: CHICAGO_COORDS.latitude,
-  longitude: CHICAGO_COORDS.longitude,
-  minAge: 25,
-  maxAge: 40,
-  maxDistance: 0, // No distance limit
+  location: {
+    city: 'Chicago',
+    country: 'US',
+    latitude: CHICAGO_COORDS.latitude,
+    longitude: CHICAGO_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 40,
+    maxDistance: 0, // No distance limit
+  },
 };
 
 /**
@@ -216,12 +276,17 @@ export const mariaMentorBoston: Omit<User, 'id'> = {
   name: 'Maria Mentor Boston',
   age: 32,
   role: 'Mentor',
-  location: 'Boston, MA',
-  latitude: BOSTON_COORDS.latitude,
-  longitude: BOSTON_COORDS.longitude,
-  minAge: 25,
-  maxAge: 40,
-  maxDistance: 0, // No distance limit
+  location: {
+    city: 'Boston',
+    country: 'US',
+    latitude: BOSTON_COORDS.latitude,
+    longitude: BOSTON_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 40,
+    maxDistance: 0, // No distance limit
+  },
 };
 
 /**
@@ -232,12 +297,17 @@ export const ninaMenteeNYCRejectsAlice: Omit<User, 'id'> = {
   name: 'Nina Mentee NYC Rejects Alice Age',
   age: 28,
   role: 'Mentee',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 32, // Alice is 30, so Nina rejects her
-  maxAge: 45,
-  maxDistance: 50,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 32, // Alice is 30, so Nina rejects her
+    maxAge: 45,
+    maxDistance: 50,
+  },
 };
 
 /**
@@ -247,10 +317,15 @@ export const oscarMenteeNYCNoDistanceLimit: Omit<User, 'id'> = {
   name: 'Oscar Mentee NYC No Distance Limit',
   age: 28,
   role: 'Mentee',
-  location: 'New York, NY',
-  latitude: NYC_COORDS.latitude,
-  longitude: NYC_COORDS.longitude,
-  minAge: 25,
-  maxAge: 35,
-  maxDistance: 0,
+  location: {
+    city: 'New York',
+    country: 'US',
+    latitude: NYC_COORDS.latitude,
+    longitude: NYC_COORDS.longitude,
+  },
+  preferences: {
+    minAge: 25,
+    maxAge: 35,
+    maxDistance: 0,
+  },
 };

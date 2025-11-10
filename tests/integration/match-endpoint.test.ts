@@ -256,12 +256,17 @@ describe('Match Endpoint Integration Tests', () => {
       expect(user.name).toBe('Bob Mentee NYC');
       expect(user.age).toBe(28);
       expect(user.role).toBe('Mentee');
-      expect(user.location).toBe('New York, NY');
-      expect(typeof user.latitude).toBe('number');
-      expect(typeof user.longitude).toBe('number');
-      expect(typeof user.minAge).toBe('number');
-      expect(typeof user.maxAge).toBe('number');
-      expect(typeof user.maxDistance).toBe('number');
+      expect(user.location).toEqual({
+        city: 'New York',
+        country: 'US',
+        latitude: 40.7128,
+        longitude: -74.006,
+      });
+      expect(user.preferences).toEqual({
+        minAge: 28,
+        maxAge: 40,
+        maxDistance: 0,
+      });
     });
   });
 
@@ -281,7 +286,12 @@ describe('Match Endpoint Integration Tests', () => {
       const data = await res.json();
       expect(data.matches).toHaveLength(1);
       expect(data.matches[0].id).toBe(grace.id);
-      expect(data.matches[0].location).toBe('Los Angeles, CA');
+      expect(data.matches[0].location).toEqual({
+        city: 'Los Angeles',
+        country: 'US',
+        latitude: 34.0522,
+        longitude: -118.2437,
+      });
     });
 
     it('correctly includes users at exact age boundaries (minAge/maxAge)', async () => {

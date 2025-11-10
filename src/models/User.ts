@@ -6,21 +6,35 @@ import { NotFoundError, UnauthorizedError } from '../lib/errors';
 // Zod schemas
 export const roleSchema = z.enum(['Mentor', 'Mentee']);
 
-export const userSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  age: z.number(),
-  role: roleSchema,
-  location: z.string(),
+export const locationSchema = z.object({
+  city: z.string(),
+  country: z.string().length(2), // ISO 3166-1 alpha-2
   latitude: z.number(),
   longitude: z.number(),
+});
+
+export const preferencesSchema = z.object({
   minAge: z.number(),
   maxAge: z.number(),
   maxDistance: z.number(),
 });
 
+export const userSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  age: z.number(),
+  role: roleSchema,
+  location: locationSchema,
+  preferences: preferencesSchema,
+  avatar: z.string().optional(),
+  bio: z.string().optional(),
+  skills: z.array(z.string().min(1).max(50)).max(20).optional(),
+});
+
 // TypeScript types
 export type Role = z.infer<typeof roleSchema>;
+export type Location = z.infer<typeof locationSchema>;
+export type Preferences = z.infer<typeof preferencesSchema>;
 export type User = z.infer<typeof userSchema>;
 
 // PocketBase DTO type (what we get from the database)
@@ -29,12 +43,16 @@ type UserDTO = {
   name: string;
   age: number;
   role: Role;
-  location: string;
-  latitude: string; // PocketBase stores as string
-  longitude: string; // PocketBase stores as string
+  city: string;
+  country: string;
+  latitude: string | number; // PocketBase may store as string or number
+  longitude: string | number;
   minAge: number;
   maxAge: number;
   maxDistance: number;
+  avatar?: string;
+  bio?: string;
+  skills?: string[];
   collectionId: string;
   collectionName: string;
   created: string;
@@ -50,12 +68,20 @@ function transformUser(dto: UserDTO): User {
     name: dto.name,
     age: dto.age,
     role: dto.role,
-    location: dto.location,
-    latitude: parseFloat(dto.latitude),
-    longitude: parseFloat(dto.longitude),
-    minAge: dto.minAge,
-    maxAge: dto.maxAge,
-    maxDistance: dto.maxDistance ?? 0,
+    location: {
+      city: dto.city,
+      country: dto.country,
+      latitude: typeof dto.latitude === 'string' ? parseFloat(dto.latitude) : dto.latitude,
+      longitude: typeof dto.longitude === 'string' ? parseFloat(dto.longitude) : dto.longitude,
+    },
+    preferences: {
+      minAge: dto.minAge,
+      maxAge: dto.maxAge,
+      maxDistance: dto.maxDistance ?? 0,
+    },
+    avatar: dto.avatar,
+    bio: dto.bio,
+    skills: dto.skills || [],
   });
 }
 
