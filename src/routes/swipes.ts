@@ -54,9 +54,10 @@ async function checkMutualMatch(
 ): Promise<MatchRecord | null> {
   try {
     // Check if the other user has already liked us
+    // Use single quotes for string literals in filter (PocketBase requirement)
     const theirSwipe = await pb
       .collection('user_swipes')
-      .getFirstListItem(`user = "${profileId}" AND profile = "${userId}" AND action = "like"`);
+      .getFirstListItem(`user='${profileId}' && profile='${userId}' && action='like'`);
 
     if (!theirSwipe) {
       return null; // They haven't liked us back

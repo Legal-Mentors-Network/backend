@@ -113,7 +113,7 @@ likes.get('/users/:userId/likes/incoming', async (ctx: Context) => {
 
   // Step 1: Get all swipes where profile = userId AND action = 'like'
   const incomingLikes = (await pb.collection('user_swipes').getFullList({
-    filter: `profile = "${userId}" AND action = "like"`,
+    filter: `profile='${userId}' && action='like'`,
     sort: '-created', // Most recent first
   })) as SwipeDTO[];
 

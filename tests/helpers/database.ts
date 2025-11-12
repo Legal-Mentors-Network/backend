@@ -36,9 +36,6 @@ export async function cleanDatabase(): Promise<void> {
     await cleanCollection('user_swipes');
     await cleanCollection('matches');
 
-    // Delete all connections
-    await cleanCollection('connections');
-
     // Delete all profiles
     await cleanCollection('profiles');
 

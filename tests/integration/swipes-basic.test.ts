@@ -54,7 +54,7 @@ describe('User Swipes Basic Operations', () => {
     try {
       // Query swipes where profile = alice.id
       const swipes = await pb.collection('user_swipes').getFullList({
-        filter: `profile = "${alice.id}" AND action = "like"`,
+        filter: `profile='${alice.id}' && action='like'`,
       });
 
       console.log('Found swipes:', swipes.length);
