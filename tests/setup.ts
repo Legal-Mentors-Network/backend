@@ -5,7 +5,7 @@ import path from 'path';
 const DEV_DB = path.join(__dirname, '../../db/pb_data');
 const TEST_DB = path.join(__dirname, '.tmp/pb_data_test');
 const PB_BINARY = path.join(__dirname, '../../db/pocketbase');
-const PB_PORT = 8092;
+const PB_PORT = 9091;
 
 let pbProcess: ChildProcess | null = null;
 
@@ -31,7 +31,7 @@ export async function setup() {
   console.log(`   ✓ Database copied in ${copyTime}ms`);
 
   // 3. Start PocketBase process
-  console.log('🚀 Starting PocketBase on port 8092...');
+  console.log('🚀 Starting PocketBase on port 9091...');
   const startSpawn = Date.now();
   pbProcess = spawn(PB_BINARY, [
     'serve',

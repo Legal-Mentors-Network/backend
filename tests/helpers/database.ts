@@ -1,28 +1,63 @@
+import { ClientResponseError } from 'pocketbase';
 import { pb } from '../../src/pocketbase';
 import type { User } from '../../src/models/User';
 
 /**
  * Clean all test data from the database
- * Removes all users, profiles, and connections created during tests
+ * Removes all users, profiles, connections, and swipes created during tests
  */
 export async function cleanDatabase(): Promise<void> {
   try {
-    // Delete all connections
-    const connections = await pb.collection('connections').getFullList();
-    for (const connection of connections) {
-      await pb.collection('connections').delete(connection.id);
+    // Helper function to safely delete all records from a collection
+    async function cleanCollection(collectionName: string): Promise<void> {
+      try {
+        const records = await pb.collection(collectionName).getFullList();
+        for (const record of records) {
+          try {
+            await pb.collection(collectionName).delete(record.id);
+          } catch (error) {
+            // Ignore 404 errors for records that may have been cascade-deleted
+            if (error instanceof ClientResponseError && error.status === 404) {
+              continue;
+            }
+            throw error;
+          }
+        }
+      } catch (error) {
+        // Ignore 404 errors for missing collections (they might not exist yet)
+        if (error instanceof ClientResponseError && error.status === 404) {
+          return;
+        }
+        throw error;
+      }
     }
+
+    // Delete all swipe-related data
+    await cleanCollection('user_swipes');
+    await cleanCollection('matches');
+
+    // Delete all connections
+    await cleanCollection('connections');
 
     // Delete all profiles
-    const profiles = await pb.collection('profiles').getFullList();
-    for (const profile of profiles) {
-      await pb.collection('profiles').delete(profile.id);
-    }
+    await cleanCollection('profiles');
 
-    // Delete all user accounts (skip superusers)
+    // Delete all non-admin user accounts
     const users = await pb.collection('users').getFullList();
     for (const user of users) {
-      await pb.collection('users').delete(user.id);
+      // Skip the admin user (check by email)
+      if (user.email && user.email.includes('admin@')) {
+        continue;
+      }
+      try {
+        await pb.collection('users').delete(user.id);
+      } catch (error) {
+        // Ignore 404 errors for users that may have been cascade-deleted
+        if (error instanceof ClientResponseError && error.status === 404) {
+          continue;
+        }
+        throw error;
+      }
     }
   } catch (error) {
     console.error('Error cleaning database:', error);

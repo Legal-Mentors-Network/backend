@@ -2,7 +2,12 @@ import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { ZodError } from 'zod'
 import { NotFoundError, BadRequestError, ValidationError, UnauthorizedError } from './lib/errors'
-import match from './routes/match-user'
+// Deprecated: Old matching endpoint (replaced by swipe-based matching system)
+// import match from './routes/match-user'
+import discovery from './routes/discovery'
+import swipes from './routes/swipes'
+import likes from './routes/likes'
+import matches from './routes/matches'
 
 const app = new Hono()
 
@@ -47,7 +52,15 @@ app.onError((err, c) => {
 })
 
 app.get('/', (ctx) => ctx.text('Legal Mentors Network API'))
-app.route('/match', match)
+
+// Deprecated: Old matching endpoint (replaced by swipe-based matching system)
+// app.route('/match', match)
+
+// New swipe-based matching endpoints
+app.route('/users', discovery)  // GET /users/:userId/discovery
+app.route('/users', swipes)     // POST /users/:userId/swipes
+app.route('/users', likes)      // GET /users/:userId/likes/incoming
+app.route('/users', matches)    // GET /users/:userId/matches
 
 const port = 3000
 console.log(`Server is running on port ${port}`)

@@ -140,7 +140,7 @@ if (!url) {
 export const pb = new PocketBase(url)
 ```
 
-**Database Location:** `/db` at port 8091 (http://127.0.0.1:8091)
+**Database Location:** `/db` at port 8090 (http://127.0.0.1:8090)
 
 **Authentication Pattern:**
 
@@ -457,7 +457,7 @@ npm run dev          # Start dev server on port 3000
 Create `.env` file:
 
 ```bash
-PB_URL=http://127.0.0.1:8091
+PB_URL=http://127.0.0.1:8090
 PB_ADMIN_EMAIL=admin@lmn.com
 PB_ADMIN_PASSWORD=admin123456
 ```
