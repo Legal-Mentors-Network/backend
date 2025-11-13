@@ -90,6 +90,11 @@ function transformUser(dto: UserDTO): User {
  * @throws {UnauthorizedError} if authentication fails
  */
 export async function authenticate(): Promise<void> {
+  // Check if already authenticated with valid token
+  if (pb.authStore.isValid) {
+    return; // Already authenticated, skip
+  }
+
   const email = process.env.PB_ADMIN_EMAIL;
   const password = process.env.PB_ADMIN_PASSWORD;
 
