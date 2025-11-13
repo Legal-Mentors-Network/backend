@@ -1,11 +1,12 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { ZodError } from 'zod'
-import { NotFoundError, BadRequestError, ValidationError, UnauthorizedError } from './lib/errors'
-import discovery from './routes/discovery'
-import swipes from './routes/swipes'
-import likes from './routes/likes'
-import matches from './routes/matches'
+import { NotFoundError, BadRequestError, ValidationError, UnauthorizedError, ConflictError } from './lib/errors.js'
+import discovery from './routes/discovery.js'
+import swipes from './routes/swipes.js'
+import likes from './routes/likes.js'
+import matches from './routes/matches.js'
+import profiles from './routes/profiles.js'
 
 const app = new Hono()
 
@@ -29,6 +30,11 @@ app.onError((err, c) => {
   // UnauthorizedError -> 401
   if (err instanceof UnauthorizedError) {
     return c.json({ error: err.message }, 401)
+  }
+
+  // ConflictError -> 409
+  if (err instanceof ConflictError) {
+    return c.json({ error: err.message }, 409)
   }
 
   // Zod validation errors -> 400
@@ -56,6 +62,9 @@ app.route('/users', discovery)  // GET /users/:userId/discovery
 app.route('/users', swipes)     // POST /users/:userId/swipes
 app.route('/users', likes)      // GET /users/:userId/likes/incoming
 app.route('/users', matches)    // GET /users/:userId/matches
+
+// Profile endpoints
+app.route('/profiles', profiles) // POST /profiles
 
 const port = 3000
 console.log(`Server is running on port ${port}`)

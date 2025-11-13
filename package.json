@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch --env-file=.env src/index.ts",
     "test": "PB_URL=http://127.0.0.1:9091 PB_ADMIN_EMAIL=admin@lmn.com PB_ADMIN_PASSWORD=admin123456 vitest"
   },
   "dependencies": {
