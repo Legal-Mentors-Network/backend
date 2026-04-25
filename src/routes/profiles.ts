@@ -1,7 +1,6 @@
 import { Hono } from 'hono';
 import type { Context } from 'hono';
-import { z } from 'zod';
-import { createProfile, createProfileSchema } from '../models/Profile.js';
+import { createProfile, type CreateProfileInput } from '../models/Profile.js';
 import { authMiddleware } from '../middleware/auth.js';
 
 const profiles = new Hono();
@@ -9,47 +8,39 @@ const profiles = new Hono();
 // Apply auth middleware to all routes
 profiles.use('*', authMiddleware);
 
-// Request body schema (input types match frontend)
-const createProfileRequestSchema = z.object({
-  userId: z.string().min(1),
-  name: z.string().min(1).max(255),
-  age: z.number().int().min(18).max(120),
-  role: z.string(),
-  city: z.string().min(1),
-  country: z.string().length(2),
-  latitude: z.number(),
-  longitude: z.number(),
-  minAge: z.number().int().min(18).max(120),
-  maxAge: z.number().int().min(18).max(120),
-  maxDistance: z.number().min(0).max(500),
-  avatar: z.string().optional(),
-  bio: z.string().optional(),
-  skills: z.array(z.string().min(1).max(50)).max(20).optional(),
-});
-
 /**
  * POST /profiles
- * Create a new profile for a user
+ * Create a new profile for a user (multipart form-data, includes avatar file).
  */
 profiles.post('/', async (ctx: Context) => {
-  const body = await ctx.req.json();
+  const formData = await ctx.req.formData();
 
-  // Validate request body
-  const validation = createProfileRequestSchema.safeParse(body);
-  if (!validation.success) {
-    return ctx.json(
-      {
-        error: 'Validation failed',
-        details: validation.error.issues,
-      },
-      400
-    );
-  }
+  // Build typed input from FormData. Validation runs inside createProfile.
+  const skills = formData.getAll('skills').map((v) => String(v)).filter((s) => s.length > 0);
+  const input: CreateProfileInput = {
+    userId: String(formData.get('userId') ?? ''),
+    name: String(formData.get('name') ?? ''),
+    age: Number(formData.get('age')),
+    role: String(formData.get('role') ?? ''),
+    city: String(formData.get('city') ?? ''),
+    country: String(formData.get('country') ?? ''),
+    latitude: Number(formData.get('latitude')),
+    longitude: Number(formData.get('longitude')),
+    minAge: Number(formData.get('minAge')),
+    maxAge: Number(formData.get('maxAge')),
+    maxDistance: Number(formData.get('maxDistance')),
+    bio: formData.get('bio') ? String(formData.get('bio')) : undefined,
+    skills: skills.length > 0 ? skills : undefined,
+  };
 
-  // Create profile
-  const profile = await createProfile(validation.data);
+  const avatarEntry = formData.get('avatar');
+  const avatarFile =
+    avatarEntry && typeof avatarEntry === 'object' && 'arrayBuffer' in avatarEntry
+      ? (avatarEntry as File)
+      : undefined;
 
-  // Return created profile
+  const profile = await createProfile(input, avatarFile);
+
   return ctx.json(
     {
       id: profile.id,

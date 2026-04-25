@@ -21,7 +21,6 @@ export const createProfileSchema = z.object({
   minAge: z.number().int().min(18).max(120),
   maxAge: z.number().int().min(18).max(120),
   maxDistance: z.number().min(0).max(500),
-  avatar: z.string().optional(),
   bio: z.string().optional(),
   skills: z.array(z.string().min(1).max(50)).max(20).optional(),
 });
@@ -61,11 +60,16 @@ type ProfileDTO = {
 };
 
 /**
- * Create a new profile for a user
+ * Create a new profile for a user.
+ * Avatar is uploaded as a binary file in the same atomic create call.
+ *
  * @throws {ConflictError} if profile already exists for user
  * @throws {BadRequestError} if validation fails
  */
-export async function createProfile(input: CreateProfileInput): Promise<ProfileDTO> {
+export async function createProfile(
+  input: CreateProfileInput,
+  avatarFile?: File | Blob,
+): Promise<ProfileDTO> {
   // Validate input
   const validationResult = createProfileWithValidationSchema.safeParse(input);
   if (!validationResult.success) {
@@ -98,29 +102,30 @@ export async function createProfile(input: CreateProfileInput): Promise<ProfileD
     }
   }
 
-  // Create the profile
+  // Create the profile via multipart so the avatar binary uploads atomically
   try {
-    const profileData: Record<string, unknown> = {
-      user: validatedData.userId,
-      name: validatedData.name,
-      age: validatedData.age,
-      role: validatedData.role,
-      location: `${validatedData.city}, ${validatedData.country}`, // Legacy format
-      city: validatedData.city,
-      country: validatedData.country,
-      latitude: validatedData.latitude,
-      longitude: validatedData.longitude,
-      minAge: validatedData.minAge,
-      maxAge: validatedData.maxAge,
-      maxDistance: validatedData.maxDistance,
-      bio: validatedData.bio,
-      skills: validatedData.skills || [],
-    };
-    if (validatedData.avatar) {
-      profileData.avatar = validatedData.avatar;
+    const formData = new FormData();
+    formData.append('user', validatedData.userId);
+    formData.append('name', validatedData.name);
+    formData.append('age', String(validatedData.age));
+    formData.append('role', validatedData.role);
+    formData.append('location', `${validatedData.city}, ${validatedData.country}`); // legacy
+    formData.append('city', validatedData.city);
+    formData.append('country', validatedData.country);
+    formData.append('latitude', validatedData.latitude);
+    formData.append('longitude', validatedData.longitude);
+    formData.append('minAge', String(validatedData.minAge));
+    formData.append('maxAge', String(validatedData.maxAge));
+    formData.append('maxDistance', String(validatedData.maxDistance));
+    if (validatedData.bio) {
+      formData.append('bio', validatedData.bio);
+    }
+    formData.append('skills', JSON.stringify(validatedData.skills || []));
+    if (avatarFile) {
+      formData.append('avatar', avatarFile);
     }
 
-    const profile = (await pb.collection('profiles').create(profileData)) as ProfileDTO;
+    const profile = (await pb.collection('profiles').create(formData)) as ProfileDTO;
     return profile;
   } catch (error) {
     if (error instanceof ClientResponseError) {
