@@ -83,7 +83,7 @@ function transformUser(dto: UserDTO): User {
       maxAge: dto.maxAge,
       maxDistance: dto.maxDistance ?? 0,
     },
-    avatar: dto.avatar,
+    avatar: dto.avatar ? pb.files.getUrl(dto, dto.avatar) : undefined,
     bio: dto.bio,
     skills: dto.skills || [],
   });
