@@ -100,7 +100,7 @@ export async function createProfile(input: CreateProfileInput): Promise<ProfileD
 
   // Create the profile
   try {
-    const profileData = {
+    const profileData: Record<string, unknown> = {
       user: validatedData.userId,
       name: validatedData.name,
       age: validatedData.age,
@@ -113,10 +113,12 @@ export async function createProfile(input: CreateProfileInput): Promise<ProfileD
       minAge: validatedData.minAge,
       maxAge: validatedData.maxAge,
       maxDistance: validatedData.maxDistance,
-      avatar: validatedData.avatar || 'https://via.placeholder.com/150',
       bio: validatedData.bio,
       skills: validatedData.skills || [],
     };
+    if (validatedData.avatar) {
+      profileData.avatar = validatedData.avatar;
+    }
 
     const profile = (await pb.collection('profiles').create(profileData)) as ProfileDTO;
     return profile;
